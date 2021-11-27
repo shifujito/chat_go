@@ -1,9 +1,20 @@
-version: "3"
+version: "3.7"
 services:
   go_chat:
     build:
       context: .
-      dockerfile: ./build/Dockerfile
+      dockerfile: ./server/Dockerfile
     tty: true
     volumes:
       - .:/go/src/app
+    ports:
+      - "8080:8080"
+  postgres:
+    build:
+      context: .
+      dockerfile: ./db/Dockerfile
+    tty: true
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=chat
+      - POSTGRES_DB=chat
