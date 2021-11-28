@@ -33,5 +33,6 @@ func main() {
 	}
 	http.HandleFunc("/", createUserHandler)
 	http.HandleFunc("/main", mainHandler)
+	http.HandleFunc("/edit", editHandler)
 	server.ListenAndServe()
 }

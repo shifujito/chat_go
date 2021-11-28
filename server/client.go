@@ -56,6 +56,17 @@ func createUserHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func editHandler(w http.ResponseWriter, r *http.Request) {
+	temp, err := template.ParseFiles(htmlPath + "edit.html")
+	if err != nil {
+		fmt.Println("edit html parser error", err)
+	}
+	err = temp.ExecuteTemplate(w, "edit", nil)
+	if err != nil {
+		fmt.Println("exectute error edit file")
+	}
+}
+
 func mainHandler(w http.ResponseWriter, r *http.Request) {
 	temp, err := template.ParseFiles(htmlPath + "main.html")
 	if err != nil {
