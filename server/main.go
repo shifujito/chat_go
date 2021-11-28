@@ -1,32 +1,29 @@
 package main
 
 import (
-	"database/sql"
-	"fmt"
 	"log"
 	"net/http"
 
+	"github.com/jinzhu/gorm"
 	_ "github.com/lib/pq"
 )
 
-var db *sql.DB
+type User struct {
+	Id        int
+	Passoword string
+}
+
+var db *gorm.DB
 
 func init() {
-	db, err := sql.Open("postgres", "user=postgres dbname=chat password=chat")
+	db, err := gorm.Open("postgres", "host=postgres port=5432 user=postgres dbname=chat password=chat sslmode=disable")
 	if err != nil {
 		log.Fatalln("not connect", err)
 	}
 	defer db.Close()
 
-	// sqlStatement := `INSERT INTO account (id) values (1)`
-	// _, err = db.Exec(sqlStatement)
-	// if err != nil {
-	// 	log.Fatalln("sql syntax error", err)
-	// }
-}
+	db.AutoMigrate(&User{})
 
-func defalutFunc(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "hello")
 }
 
 func main() {

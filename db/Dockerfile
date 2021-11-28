@@ -1,5 +1,7 @@
-# go versino
+# postgres version
 FROM postgres:latest
 ENV LANG ja_JP.utf8
-CMD ["/bin/sh"]
-EXPOSE 5432
+# https://www.softel.co.jp/blogs/tech/archives/6575
+RUN apt update
+RUN apt install locales-all -y
+# CMD ["/bin/sh"]
