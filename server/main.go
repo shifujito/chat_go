@@ -9,8 +9,9 @@ import (
 )
 
 type User struct {
-	Id        int
-	Passoword string
+	Id       uint   `gorm:primary_key`
+	Name     string `gorm:"size:255;not null;unique"`
+	Password string
 }
 
 var db *gorm.DB
@@ -30,6 +31,7 @@ func main() {
 	server := http.Server{
 		Addr: ":8080",
 	}
-	http.HandleFunc("/", defalutFunc)
+	http.HandleFunc("/", createUserHandler)
+	http.HandleFunc("/main", mainHandler)
 	server.ListenAndServe()
 }
