@@ -53,7 +53,6 @@ func createUserHandler(w http.ResponseWriter, r *http.Request) {
 			fmt.Println("exectute template error", err)
 		}
 	}
-
 }
 
 func editHandler(w http.ResponseWriter, r *http.Request) {
@@ -72,9 +71,8 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println("html parser error", err)
 	}
-	err = temp.ExecuteTemplate(w, "main", nil)
+	err = temp.ExecuteTemplate(w, "main", r)
 	if err != nil {
 		fmt.Println("exectute template error", nil)
 	}
-
 }
