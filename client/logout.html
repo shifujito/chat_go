@@ -1,0 +1,19 @@
+{{ define "logout" }}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html">
+    <title>Logout page</title>
+</head>
+<body>
+    <div>
+        <form action="/logout" method="POST">
+            <p>ユーザーネーム: <input type="text" name="name" value=""/></p>
+            <p>パスワード: <input type="password" name="password" value=""/></p>
+            <input type="submit" value="log out" />
+        </form>
+    </div>
+</body>
+</html>
+{{ end }}

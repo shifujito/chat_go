@@ -24,7 +24,6 @@ func init() {
 	defer db.Close()
 
 	db.AutoMigrate(&User{})
-
 }
 
 func main() {
@@ -35,5 +34,7 @@ func main() {
 	http.HandleFunc("/login", loginHandler)
 	http.HandleFunc("/main", mainHandler)
 	http.HandleFunc("/delete", deleteHandler)
+	http.HandleFunc("/logout", logoutHandler)
+	http.HandleFunc("/afterlogout", afterlogoutHandler)
 	server.ListenAndServe()
 }

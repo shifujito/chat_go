@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-	"html/template"
 	"net/http"
 
 	"github.com/gorilla/sessions"
@@ -11,16 +9,11 @@ import (
 var key = []byte("super-secret-key")
 var store = sessions.NewCookieStore(key)
 
-func UreateSession(w http.ResponseWriter, r *http.Request) {
-	temp, err := template.ParseFiles(htmlPath + "delete.html")
+func giveSesstion(w http.ResponseWriter, r *http.Request) (auth bool, err error) {
 	session, _ := store.Get(r, "cookie-name")
-	session.Values["authenticated"] = true
-	session.Save(r, w)
-	if err != nil {
-		fmt.Println("edit html parser error", err)
+	auth, ok := session.Values["authenticated"].(bool)
+	if !auth || !ok {
+		return false, err
 	}
-	err = temp.ExecuteTemplate(w, "delete", r)
-	if err != nil {
-		fmt.Println("exectute error edit file")
-	}
+	return auth, nil
 }

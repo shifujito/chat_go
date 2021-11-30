@@ -9,8 +9,8 @@
 <body>
     <div>
         {{ if .LoginMiss }}
-        <p>ユーザーネームまたはパスワードが違います。</p>
-    {{ end }}
+            <p>ユーザーネームまたはパスワードが違います。</p>
+        {{ end }}
         <form action="/login" method="POST">
             <p>ユーザーネーム: <input type="text" name="name" value=""/></p>
             <p>パスワード: <input type="password" name="password" value=""/></p>

@@ -66,16 +66,23 @@ func createUserHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func loginHandler(w http.ResponseWriter, r *http.Request) {
-	temp, err := template.ParseFiles(htmlPath + "login.html")
+	auth, err := giveSesstion(w, r)
 	if err != nil {
 		fmt.Println("no html file", err)
+	}
+
+	if auth {
+		http.Redirect(w, r, "/main", http.StatusFound)
+		return
+	}
+	temp, err := template.ParseFiles(htmlPath + "login.html")
+	if err != nil {
+		fmt.Println("no session")
 	}
 	// loginできたらmainにリダイレクト
 	if r.Method == "POST" {
 		name := r.FormValue("name")
 		password := r.FormValue("password")
-		fmt.Println(name)
-		fmt.Println(password)
 		findUser := User{}
 		db := dbConnect()
 		db.Where("name = ? AND password = ?", name, password).Find(&findUser)
@@ -96,6 +103,43 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("exectute error login file")
 	}
 	// sessionがあったらメインにリダイレクト
+}
+
+func logoutHandler(w http.ResponseWriter, r *http.Request) {
+	session, _ := store.Get(r, "cookie-name")
+	if r.Method == "POST" {
+		// dbのnameとpasswordを確認
+		deleteUser := User{}
+		db := dbConnect()
+		name := r.FormValue("name")
+		password := r.FormValue("password")
+		db.Where("name = ? AND password = ?", name, password).Find(&deleteUser)
+		if deleteUser.Name == name && deleteUser.Password == password {
+			session.Values["authenticated"] = false
+			session.Save(r, w)
+			http.Redirect(w, r, "/afterlogout", http.StatusFound)
+			return
+		}
+	}
+	temp, err := template.ParseFiles(htmlPath + "logout.html")
+	if err != nil {
+		fmt.Println("edit html parser error", err)
+	}
+	err = temp.ExecuteTemplate(w, "logout", nil)
+	if err != nil {
+		fmt.Println("exectute error edit file")
+	}
+}
+
+func afterlogoutHandler(w http.ResponseWriter, r *http.Request) {
+	temp, err := template.ParseFiles(htmlPath + "afterlogout.html")
+	if err != nil {
+		fmt.Println("edit html parser error", err)
+	}
+	err = temp.ExecuteTemplate(w, "afterlogout", nil)
+	if err != nil {
+		fmt.Println("exectute error edit file")
+	}
 }
 
 func deleteHandler(w http.ResponseWriter, r *http.Request) {
