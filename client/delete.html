@@ -7,7 +7,11 @@
     <title>User delete</title>
 </head>
 <body>
-    <p>delete</p>
+    <form action="/delete" method="POST">
+        <p>ユーザーネーム: <input type="text" name="name" value=""/></p>
+        <p>パスワード: <input type="password" name="password" value=""/></p>
+        <input type="submit" value="delete" />
+    </form>
 </body>
 </html>
 {{ end }}

@@ -3,10 +3,7 @@ package main
 import (
 	"fmt"
 	"html/template"
-	"log"
 	"net/http"
-
-	"github.com/jinzhu/gorm"
 )
 
 var htmlPath string = "../client/"
@@ -15,33 +12,8 @@ type LoginStatus struct {
 	LoginMiss bool
 }
 
-func dbConnect() (db *gorm.DB) {
-	db, err := gorm.Open("postgres", "host=postgres port=5432 user=postgres dbname=chat password=chat sslmode=disable")
-	if err != nil {
-		log.Fatalln("not connect", err)
-	}
-	return db
-}
-
-func insertUser(name string, password string) (*User, error) {
-	userData := User{Name: name, Password: password}
-	db := dbConnect()
-	db = db.Create(&userData)
-	err := db.Error
-	if err != nil {
-		return nil, fmt.Errorf("html/template: cannot Parse after Execute")
-	}
-	defer db.Close()
-	return &userData, nil
-}
-
-// func checkUser(name string, password string) (err error) {
-// 	userData := User{Name: name, Password: password}
-// 	// dbにuser nameとpassword合致をしらべる。
-// 	db := dbConnect()
-// }
-
 func createUserHandler(w http.ResponseWriter, r *http.Request) {
+	hasSession(w, r)
 	temp, err := template.ParseFiles(htmlPath + "create.html")
 	if err != nil {
 		fmt.Println("html parser error", err)
@@ -66,7 +38,7 @@ func createUserHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func loginHandler(w http.ResponseWriter, r *http.Request) {
-	auth, err := giveSesstion(w, r)
+	auth, err := giveCookie(w, r)
 	if err != nil {
 		fmt.Println("no html file", err)
 	}
@@ -87,6 +59,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		db := dbConnect()
 		db.Where("name = ? AND password = ?", name, password).Find(&findUser)
 		if findUser.Name == name && findUser.Password == password {
+			giveSession(w, r)
 			http.Redirect(w, r, "/main", http.StatusFound)
 			return
 		}
@@ -106,15 +79,16 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func logoutHandler(w http.ResponseWriter, r *http.Request) {
+	hasSession(w, r)
 	session, _ := store.Get(r, "cookie-name")
 	if r.Method == "POST" {
 		// dbのnameとpasswordを確認
-		deleteUser := User{}
+		logoutUser := User{}
 		db := dbConnect()
 		name := r.FormValue("name")
 		password := r.FormValue("password")
-		db.Where("name = ? AND password = ?", name, password).Find(&deleteUser)
-		if deleteUser.Name == name && deleteUser.Password == password {
+		db.Where("name = ? AND password = ?", name, password).Find(&logoutUser)
+		if logoutUser.Name == name && logoutUser.Password == password {
 			session.Values["authenticated"] = false
 			session.Save(r, w)
 			http.Redirect(w, r, "/afterlogout", http.StatusFound)
@@ -143,20 +117,31 @@ func afterlogoutHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func deleteHandler(w http.ResponseWriter, r *http.Request) {
+	hasSession(w, r)
 	temp, err := template.ParseFiles(htmlPath + "delete.html")
 	if err != nil {
-		fmt.Println("edit html parser error", err)
+		fmt.Println("no html file", err)
 	}
-	err = temp.ExecuteTemplate(w, "delete", nil)
+	// if r.Method == "POST" {
+	// 	db := dbConnect()
+	// 	name := r.FormValue("name")
+	// 	password := r.FormValue("password")
+	// 	deleteUser := User{}
+	// 	db.Delete(&deleteUser, deleteUser.Id)
+
+	// }
+
+	err = temp.ExecuteTemplate(w, "delete", r)
 	if err != nil {
-		fmt.Println("exectute error edit file")
+		fmt.Println("exectute template error", nil)
 	}
 }
 
 func mainHandler(w http.ResponseWriter, r *http.Request) {
+	hasSession(w, r)
 	temp, err := template.ParseFiles(htmlPath + "main.html")
 	if err != nil {
-		fmt.Println("html parser error", err)
+		fmt.Println("no html file", err)
 	}
 	err = temp.ExecuteTemplate(w, "main", r)
 	if err != nil {
