@@ -7,11 +7,11 @@
     <title>Login page</title>
 </head>
 <body>
-    <p>Hello world</p>
     <form action="/" method="POST">
         {{ if .}}
             <p> そのユーザーネームは使われてます。</p>
         {{ end }}
+        <p>新規登録</p>
         <p>ユーザーネーム: <input type="text" name="name" /></p>
         <p>パスワード: <input type="password" name="password" /></p>
         <input type="submit" value="登録" />

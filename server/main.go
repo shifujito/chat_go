@@ -31,8 +31,9 @@ func main() {
 	server := http.Server{
 		Addr: ":8080",
 	}
-	http.HandleFunc("/", createUserHandler)
+	http.HandleFunc("/create", createUserHandler)
+	http.HandleFunc("/login", loginHandler)
 	http.HandleFunc("/main", mainHandler)
-	http.HandleFunc("/edit", editHandler)
+	http.HandleFunc("/delete", deleteHandler)
 	server.ListenAndServe()
 }

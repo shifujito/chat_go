@@ -1,19 +1,26 @@
 package main
 
 import (
-	"crypto/rand"
-	"io"
+	"fmt"
+	"html/template"
+	"net/http"
+
+	"github.com/gorilla/sessions"
 )
 
-type Manager struct {
-	database map[string]interface{}
-}
+var key = []byte("super-secret-key")
+var store = sessions.NewCookieStore(key)
 
-func (m *Manager) NewSessionID() string {
-	b := make([]byte, 64)
-	_, err := io.ReadFull(rand.Reader, b)
+func UreateSession(w http.ResponseWriter, r *http.Request) {
+	temp, err := template.ParseFiles(htmlPath + "delete.html")
+	session, _ := store.Get(r, "cookie-name")
+	session.Values["authenticated"] = true
+	session.Save(r, w)
 	if err != nil {
-		panic(err)
+		fmt.Println("edit html parser error", err)
 	}
-
+	err = temp.ExecuteTemplate(w, "delete", r)
+	if err != nil {
+		fmt.Println("exectute error edit file")
+	}
 }

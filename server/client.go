@@ -11,6 +11,10 @@ import (
 
 var htmlPath string = "../client/"
 
+type LoginStatus struct {
+	LoginMiss bool
+}
+
 func dbConnect() (db *gorm.DB) {
 	db, err := gorm.Open("postgres", "host=postgres port=5432 user=postgres dbname=chat password=chat sslmode=disable")
 	if err != nil {
@@ -31,6 +35,12 @@ func insertUser(name string, password string) (*User, error) {
 	return &userData, nil
 }
 
+// func checkUser(name string, password string) (err error) {
+// 	userData := User{Name: name, Password: password}
+// 	// dbにuser nameとpassword合致をしらべる。
+// 	db := dbConnect()
+// }
+
 func createUserHandler(w http.ResponseWriter, r *http.Request) {
 	temp, err := template.ParseFiles(htmlPath + "create.html")
 	if err != nil {
@@ -43,7 +53,7 @@ func createUserHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			fmt.Println(err)
 			http.Redirect(w, r, "/create", http.StatusFound)
-			return
+
 		}
 		http.Redirect(w, r, "/main", http.StatusFound)
 	} else {
@@ -55,12 +65,45 @@ func createUserHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func editHandler(w http.ResponseWriter, r *http.Request) {
-	temp, err := template.ParseFiles(htmlPath + "edit.html")
+func loginHandler(w http.ResponseWriter, r *http.Request) {
+	temp, err := template.ParseFiles(htmlPath + "login.html")
+	if err != nil {
+		fmt.Println("no html file", err)
+	}
+	// loginできたらmainにリダイレクト
+	if r.Method == "POST" {
+		name := r.FormValue("name")
+		password := r.FormValue("password")
+		fmt.Println(name)
+		fmt.Println(password)
+		findUser := User{}
+		db := dbConnect()
+		db.Where("name = ? AND password = ?", name, password).Find(&findUser)
+		if findUser.Name == name && findUser.Password == password {
+			http.Redirect(w, r, "/main", http.StatusFound)
+			return
+		}
+		status := LoginStatus{LoginMiss: true}
+		err = temp.ExecuteTemplate(w, "login", status)
+		if err != nil {
+			fmt.Println("exectute error login file")
+		}
+		return
+	}
+	status := LoginStatus{LoginMiss: false}
+	err = temp.ExecuteTemplate(w, "login", status)
+	if err != nil {
+		fmt.Println("exectute error login file")
+	}
+	// sessionがあったらメインにリダイレクト
+}
+
+func deleteHandler(w http.ResponseWriter, r *http.Request) {
+	temp, err := template.ParseFiles(htmlPath + "delete.html")
 	if err != nil {
 		fmt.Println("edit html parser error", err)
 	}
-	err = temp.ExecuteTemplate(w, "edit", nil)
+	err = temp.ExecuteTemplate(w, "delete", nil)
 	if err != nil {
 		fmt.Println("exectute error edit file")
 	}
