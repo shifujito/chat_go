@@ -8,5 +8,6 @@ import (
 
 func main() {
 	http.HandleFunc("/index", indexHandler)
+	http.HandleFunc("/login", loginHandler)
 	http.ListenAndServe(":8080", nil)
 }
