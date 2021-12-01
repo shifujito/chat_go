@@ -7,8 +7,6 @@ import (
 )
 
 func main() {
-	server := http.Server{
-		Addr: ":8080",
-	}
-	server.ListenAndServe()
+	http.HandleFunc("/index", indexHandler)
+	http.ListenAndServe(":8080", nil)
 }
