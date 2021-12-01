@@ -13,7 +13,6 @@ type LoginStatus struct {
 }
 
 func createUserHandler(w http.ResponseWriter, r *http.Request) {
-	hasSession(w, r)
 	temp, err := template.ParseFiles(htmlPath + "create.html")
 	if err != nil {
 		fmt.Println("html parser error", err)
@@ -23,10 +22,12 @@ func createUserHandler(w http.ResponseWriter, r *http.Request) {
 		password := r.FormValue("password")
 		_, err := insertUser(name, password)
 		if err != nil {
-			fmt.Println(err)
 			http.Redirect(w, r, "/create", http.StatusFound)
-
+			return
 		}
+		session, _ := store.Get(r, "cookie-name")
+		session.Values["authenticated"] = true
+		session.Save(r, w)
 		http.Redirect(w, r, "/main", http.StatusFound)
 	} else {
 		// method is GET
@@ -42,7 +43,6 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println("no html file", err)
 	}
-
 	if auth {
 		http.Redirect(w, r, "/main", http.StatusFound)
 		return
@@ -81,20 +81,8 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 func logoutHandler(w http.ResponseWriter, r *http.Request) {
 	hasSession(w, r)
 	session, _ := store.Get(r, "cookie-name")
-	if r.Method == "POST" {
-		// dbのnameとpasswordを確認
-		logoutUser := User{}
-		db := dbConnect()
-		name := r.FormValue("name")
-		password := r.FormValue("password")
-		db.Where("name = ? AND password = ?", name, password).Find(&logoutUser)
-		if logoutUser.Name == name && logoutUser.Password == password {
-			session.Values["authenticated"] = false
-			session.Save(r, w)
-			http.Redirect(w, r, "/afterlogout", http.StatusFound)
-			return
-		}
-	}
+	session.Values["authenticated"] = false
+	session.Save(r, w)
 	temp, err := template.ParseFiles(htmlPath + "logout.html")
 	if err != nil {
 		fmt.Println("edit html parser error", err)
@@ -122,14 +110,18 @@ func deleteHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println("no html file", err)
 	}
-	// if r.Method == "POST" {
-	// 	db := dbConnect()
-	// 	name := r.FormValue("name")
-	// 	password := r.FormValue("password")
-	// 	deleteUser := User{}
-	// 	db.Delete(&deleteUser, deleteUser.Id)
-
-	// }
+	if r.Method == "POST" {
+		db := dbConnect()
+		name := r.FormValue("name")
+		password := r.FormValue("password")
+		deleteUser := User{}
+		db.Delete(&deleteUser, deleteUser.Id)
+		db.Where("name = ? AND password = ? ", name, password).Delete(&deleteUser)
+		session, _ := store.Get(r, "cookie-name")
+		session.Values["authenticated"] = false
+		session.Save(r, w)
+		http.Redirect(w, r, "/login", http.StatusFound)
+	}
 
 	err = temp.ExecuteTemplate(w, "delete", r)
 	if err != nil {

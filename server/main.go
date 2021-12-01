@@ -9,7 +9,7 @@ import (
 )
 
 type User struct {
-	Id       uint   `gorm:primary_key`
+	Id       uint   `gorm:primary_key;not null;unique`
 	Name     string `gorm:"size:255;not null;unique"`
 	Password string
 }
