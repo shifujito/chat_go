@@ -4,12 +4,9 @@ import (
 	"fmt"
 	"net/http"
 	"text/template"
-
-	"github.com/gorilla/sessions"
 )
 
 var htmlPath string = "../client/"
-var cs *sessions.CookieStore = sessions.NewCookieStore([]byte("key"))
 
 type Content struct {
 	Title   string
@@ -17,12 +14,15 @@ type Content struct {
 }
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
+	user := checkLogin(w, r)
 	temp, err := template.ParseFiles(htmlPath + "index.html")
 	if err != nil {
 		panic(err)
+		fmt.Println(user)
 	}
-	ses, _ := cs.Get(r, "session-hello")
+	ses, _ := cs.Get(r, sesName)
 	flg, _ := ses.Values["login"].(bool)
+	fmt.Println(flg)
 	name, _ := ses.Values["name"].(string)
 	if flg {
 		msg := name
@@ -32,10 +32,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 			panic(err)
 		}
 	} else {
-		err = temp.ExecuteTemplate(w, "index", Content{Title: "index", Message: "no session"})
-		if err != nil {
-			panic(err)
-		}
+		http.Redirect(w, r, "/login", http.StatusFound)
 	}
 
 }
@@ -45,7 +42,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
-	ses, _ := cs.Get(r, "session-hello")
+	ses, _ := cs.Get(r, sesName)
 	ses.Values["login"] = false
 	ses.Values["name"] = nil
 	// method
@@ -60,7 +57,22 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/index", http.StatusFound)
 	}
 
-	err = temp.ExecuteTemplate(w, "login", Content{Title: "loginds"})
+	err = temp.ExecuteTemplate(w, "login", Content{Title: "login"})
+	if err != nil {
+		panic(err)
+	}
+}
+
+func logoutHandler(w http.ResponseWriter, r *http.Request) {
+	temp, err := template.ParseFiles(htmlPath + "logout.html")
+	if err != nil {
+		panic(err)
+	}
+	ses, _ := cs.Get(r, sesName)
+	ses.Values["login"] = false
+	ses.Values["name"] = nil
+	ses.Save(r, w)
+	err = temp.ExecuteTemplate(w, "logout", Content{Title: "logout"})
 	if err != nil {
 		panic(err)
 	}
