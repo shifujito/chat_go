@@ -40,6 +40,11 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 			temp.ExecuteTemplate(w, "login", Message{Message: errMessage})
 			return
 		}
+		// sucess login
+		err = addSession(r, w, findUser.ID)
+		if err != nil {
+			panic(err)
+		}
 		http.Redirect(w, r, "main", http.StatusFound)
 	}
 
@@ -74,6 +79,10 @@ func createHandler(w http.ResponseWriter, r *http.Request) {
 			temp.ExecuteTemplate(w, "create", Message{Message: errMessage})
 		}
 		defer db.Close()
+		err = addSession(r, w, insertUser.ID)
+		if err != nil {
+			panic(err)
+		}
 		http.Redirect(w, r, "/main", http.StatusFound)
 		return
 	}
@@ -81,6 +90,13 @@ func createHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func mainHandler(w http.ResponseWriter, r *http.Request) {
+	// session
+	err := checkSession(r, w)
+	if err != nil {
+		http.Redirect(w, r, "/login", http.StatusFound)
+		return
+	}
+	// parse
 	temp, err := template.ParseFiles(htmlPath + "main.html")
 	if err != nil {
 		panic(err)
@@ -89,6 +105,12 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func logoutHandler(w http.ResponseWriter, r *http.Request) {
+	// session
+	err := removeSession(r, w)
+	if err != nil {
+		panic(err)
+	}
+	// parse
 	temp, err := template.ParseFiles(htmlPath + "logout.html")
 	if err != nil {
 		panic(err)
