@@ -13,13 +13,19 @@ type User struct {
 	Password []byte `gorm:"not null"`
 }
 
+type Post struct {
+	gorm.Model
+	UserId uint `gorm:"not null"`
+	Text   string
+}
+
 func init() {
 	db, err := gorm.Open("postgres", "host=postgres port=5432 user=postgres dbname=chat password=chat sslmode=disable")
 	if err != nil {
 		log.Fatalln("not connect", err)
 	}
 
-	db.AutoMigrate(&User{})
+	db.AutoMigrate(&User{}, &Post{})
 
 	defer db.Close()
 

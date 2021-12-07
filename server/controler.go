@@ -12,6 +12,11 @@ type Message struct {
 	Message string
 }
 
+type Content struct {
+	UserName string
+	Texts    []postContent
+}
+
 var htmlPath string = "../client/"
 
 func loginHandler(w http.ResponseWriter, r *http.Request) {
@@ -34,6 +39,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		password := r.PostFormValue("password")
 		var findUser User
 		db.Where("name = ? ", name).First(&findUser)
+		defer db.Close()
 		err = bcrypt.CompareHashAndPassword(findUser.Password, []byte(password))
 		if err != nil {
 			errMessage := "ユーザーネームまたはパスワードが一致しません。"
@@ -101,7 +107,18 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
-	temp.ExecuteTemplate(w, "main", nil)
+	// 投稿内容とその人の名前を表示
+	db := dbConnect()
+	allPost := []Post{}
+	db.Find(&allPost)
+	defer db.Close()
+	// allpost の　id t0 username
+	converPost := allPostIdToName(allPost)
+	// display user name
+	userId := getUserId(r)
+	name := getUserName(userId)
+	contents := Content{UserName: name, Texts: converPost}
+	temp.ExecuteTemplate(w, "main", contents)
 }
 
 func logoutHandler(w http.ResponseWriter, r *http.Request) {
@@ -116,4 +133,31 @@ func logoutHandler(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 	temp.ExecuteTemplate(w, "logout", nil)
+}
+
+func postHandler(w http.ResponseWriter, r *http.Request) {
+	err := checkSession(r, w)
+	if err != nil {
+		http.Redirect(w, r, "/login", http.StatusFound)
+		return
+	}
+	// post
+	if r.Method == "POST" {
+		// 	// post dbに保存する。
+		text := r.PostFormValue("content")
+		userId := getUserId(r)
+		postContent := Post{UserId: userId, Text: text}
+		db := dbConnect()
+		err = db.Create(&postContent).Error
+		defer db.Close()
+		if err != nil {
+			panic(err)
+		}
+		http.Redirect(w, r, "/main", http.StatusFound)
+	}
+	temp, err := template.ParseFiles(htmlPath + "post.html")
+	if err != nil {
+		panic(err)
+	}
+	temp.ExecuteTemplate(w, "post", nil)
 }

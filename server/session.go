@@ -25,7 +25,6 @@ func checkSession(r *http.Request, w http.ResponseWriter) (err error) {
 	if session.Values["id"] == nil {
 		err := errors.New("no user id in session")
 		return err
-
 	}
 	return nil
 }

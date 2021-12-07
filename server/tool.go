@@ -7,7 +7,10 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// var hashCost int = 4
+type postContent struct {
+	Name string
+	Text string
+}
 
 func formValidation(r *http.Request) (err error) {
 	name := r.PostFormValue("name")
@@ -24,4 +27,27 @@ func getHashPassword(r *http.Request) []byte {
 	bytePassword := []byte(password)
 	hashedPassword, _ := bcrypt.GenerateFromPassword(bytePassword, bcrypt.DefaultCost)
 	return hashedPassword
+}
+
+func getUserName(id uint) (userName string) {
+	findName := User{}
+	db := dbConnect()
+	db.Where("id = ? ", id).First(&findName)
+	userName = findName.Name
+	return userName
+}
+
+func getUserId(r *http.Request) (userId uint) {
+	session, _ := cs.Get(r, sessionName)
+	userId = session.Values["id"].(uint)
+	return userId
+}
+
+func allPostIdToName(posts []Post) (newPosts []postContent) {
+	for _, post := range posts {
+		name := getUserName(post.UserId)
+		rows := postContent{Name: name, Text: post.Text}
+		newPosts = append(newPosts, rows)
+	}
+	return
 }
