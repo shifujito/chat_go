@@ -8,6 +8,7 @@ import (
 )
 
 type postContent struct {
+	Id   uint
 	Name string
 	Text string
 }
@@ -46,7 +47,7 @@ func getUserId(r *http.Request) (userId uint) {
 func allPostIdToName(posts []Post) (newPosts []postContent) {
 	for _, post := range posts {
 		name := getUserName(post.UserId)
-		rows := postContent{Name: name, Text: post.Text}
+		rows := postContent{Id: post.Id, Name: name, Text: post.Text}
 		newPosts = append(newPosts, rows)
 	}
 	return

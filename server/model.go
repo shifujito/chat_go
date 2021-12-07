@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"time"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/lib/pq"
@@ -14,9 +15,11 @@ type User struct {
 }
 
 type Post struct {
-	gorm.Model
-	UserId uint `gorm:"not null"`
-	Text   string
+	Id        uint `gorm:"primary_key"`
+	UserId    uint `gorm:"not null"`
+	Text      string
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 func init() {

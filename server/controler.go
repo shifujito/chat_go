@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
+	"sort"
+	"time"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -113,6 +115,7 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
 	db.Find(&allPost)
 	defer db.Close()
 	// allpost の　id t0 username
+	sort.Slice(allPost, func(i, j int) bool { return allPost[i].CreatedAt.After(allPost[j].CreatedAt) })
 	converPost := allPostIdToName(allPost)
 	// display user name
 	userId := getUserId(r)
@@ -146,7 +149,7 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 		// 	// post dbに保存する。
 		text := r.PostFormValue("content")
 		userId := getUserId(r)
-		postContent := Post{UserId: userId, Text: text}
+		postContent := Post{UserId: userId, Text: text, CreatedAt: time.Now()}
 		db := dbConnect()
 		err = db.Create(&postContent).Error
 		defer db.Close()
