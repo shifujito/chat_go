@@ -35,6 +35,7 @@ func getUserName(id uint) (userName string) {
 	db := dbConnect()
 	db.Where("id = ? ", id).First(&findName)
 	userName = findName.Name
+	defer db.Close()
 	return userName
 }
 
