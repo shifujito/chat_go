@@ -215,3 +215,21 @@ func deleteHandler(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 	temp.ExecuteTemplate(w, "post_delete", deletepost)
 }
+
+func findUserHandler(w http.ResponseWriter, r *http.Request) {
+	// confirm session
+	err := checkSession(r, w)
+	if err != nil {
+		http.Redirect(w, r, "/login", http.StatusFound)
+		return
+	}
+	// 自分以外のユーザーをとりあえず一覧で表示
+	temp, err := template.ParseFiles(htmlPath + "find_user.html")
+	if err != nil {
+		panic(err)
+	}
+	users := []User{}
+	db := dbConnect()
+	db.Find(&users)
+	temp.ExecuteTemplate(w, "find_user", users)
+}

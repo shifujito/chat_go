@@ -22,13 +22,19 @@ type Post struct {
 	UpdatedAt time.Time
 }
 
+type Followers struct {
+	Id         uint `gorm:"primary_key"`
+	OwnerId    uint `gorm:"not null"`
+	FollowerId uint `gorm:"not null"`
+}
+
 func init() {
 	db, err := gorm.Open("postgres", "host=postgres port=5432 user=postgres dbname=chat password=chat sslmode=disable")
 	if err != nil {
 		log.Fatalln("not connect", err)
 	}
 
-	db.AutoMigrate(&User{}, &Post{})
+	db.AutoMigrate(&User{}, &Post{}, &Followers{})
 
 	defer db.Close()
 

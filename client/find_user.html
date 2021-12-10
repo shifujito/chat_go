@@ -1,0 +1,15 @@
+{{ define "find_user"}}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>ユーザー検索</title>
+</head>
+<body>
+    <h1>ユーザー検索</h1>
+    {{ range $user := .}}
+    <div>{{ $user.Name }}</div>
+    {{ end }}
+</body>
+</html>
+{{ end }}
