@@ -230,6 +230,9 @@ func findUserHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	users := []User{}
 	db := dbConnect()
-	db.Find(&users)
+	// 自分以外
+	loginId := getUserId(r)
+	db.Not("id = ?", loginId).Find(&users)
+	defer db.Close()
 	temp.ExecuteTemplate(w, "find_user", users)
 }
