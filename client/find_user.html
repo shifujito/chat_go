@@ -7,9 +7,21 @@
 </head>
 <body>
     <h1>ユーザー検索</h1>
-    {{ range $user := .}}
-    <div>{{ $user.Name }}</div>
-    {{ end }}
+    <table>
+        <thead>
+            <th>名前</th>
+            <th>フォロー</th>
+        </thead>
+        <tbody>
+            {{ range $user := .}}
+            <tr>
+                <td>{{ $user.Name }}</td>
+                <td><a href="">フォローする</a></td>
+            </tr>
+            {{ end }}
+        </tbody>
+    </table>
+
     <a href="/main">戻る</a>
 </body>
 </html>
