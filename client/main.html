@@ -1,4 +1,5 @@
 {{ define "main"}}
+{{ $loginUser := .UserName }}
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,7 +9,7 @@
 <body>
     <h1>メインページ</h1>
     <br />
-    <h2>ユーザーネーム  {{.UserName}}</h2>
+    <h2>ユーザーネーム  {{$loginUser}}</h2>
     <br />
     <a href="post">投稿する</a>
     <br />
@@ -16,11 +17,15 @@
     <a href="/logout">logout</a>
     <br />
     <br />
-    {{ range .Texts }}
+    {{ range $post := .Texts }}
         <div style="border-style: solid; border-color: black; background-color:dimgrey;">
-            <p>{{ .Name }} </p>
-            <div style=" height: 50px;">{{ .Text }}</div>
-            <a href="/main/delete?id={{ .Id }}">削除する</a>
+            <p>{{ $post.Name }} </p>
+            <div style=" height: 50px;">{{ $post.Text }}</div>
+            {{ if eq $post.Name $loginser }}
+                <a href="/main/delete?id={{ $post.Id }}">削除する</a>
+            {{ else }}
+                <div>いいね || リツイート</div>
+            {{ end }}
         </div>
         <br />
     {{ end }}
