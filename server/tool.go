@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 
 	"golang.org/x/crypto/bcrypt"
@@ -52,4 +53,22 @@ func allPostIdToName(posts []Post) (newPosts []postContent) {
 		newPosts = append(newPosts, rows)
 	}
 	return
+}
+
+func checkPostDeleteUser(r *http.Request, deleteId int) (err error) {
+	// session login
+	sessionId := getUserId(r)
+	// delete id
+	deletePost := Post{Id: uint(deleteId)}
+	// db connect
+	db := dbConnect()
+	err = db.First(&deletePost).Error
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer db.Close()
+	if sessionId == deletePost.UserId {
+		return nil
+	}
+	return errors.New("403:Forbidden")
 }

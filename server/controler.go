@@ -179,7 +179,18 @@ func deleteHandler(w http.ResponseWriter, r *http.Request) {
 	deletepost := Post{Id: uint(deleteId)}
 	// method post is delete post in db
 	if r.Method == "POST" {
+
 		// session id とpostのuser idが一致するかを確認
+		err := checkPostDeleteUser(r, deleteId)
+		if err != nil {
+			w.WriteHeader(403)
+			temp, err := template.ParseFiles(htmlPath + "403.html")
+			if err != nil {
+				panic(err)
+			}
+			temp.ExecuteTemplate(w, "403", nil)
+			return
+		}
 		db := dbConnect()
 		err = db.Delete(&deletepost, deleteId).Error
 		if err != nil {
