@@ -175,7 +175,7 @@ func deleteHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	// get delete post id
 	delete_id, _ := strconv.Atoi(r.URL.Query().Get("id"))
-	deletepost := Post{}
+	deletepost := Post{Id: uint(delete_id)}
 	// method post is delete post in db
 	if r.Method == "POST" {
 		db := dbConnect()
