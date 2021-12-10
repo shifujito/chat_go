@@ -21,7 +21,7 @@
         <div style="border-style: solid; border-color: black; background-color:dimgrey;">
             <p>{{ $post.Name }} </p>
             <div style=" height: 50px;">{{ $post.Text }}</div>
-            {{ if eq $post.Name $loginser }}
+            {{ if eq $post.Name $loginUser }}
                 <a href="/main/delete?id={{ $post.Id }}">削除する</a>
             {{ else }}
                 <div>いいね || リツイート</div>
