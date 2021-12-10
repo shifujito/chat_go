@@ -16,6 +16,7 @@ type Message struct {
 }
 
 type Content struct {
+	UserId   uint
 	UserName string
 	Texts    []postContent
 }
@@ -121,7 +122,7 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
 	// display user name
 	userId := getUserId(r)
 	name := getUserName(userId)
-	contents := Content{UserName: name, Texts: converPost}
+	contents := Content{UserId: userId, UserName: name, Texts: converPost}
 	temp.ExecuteTemplate(w, "main", contents)
 }
 
@@ -174,12 +175,13 @@ func deleteHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// get delete post id
-	delete_id, _ := strconv.Atoi(r.URL.Query().Get("id"))
-	deletepost := Post{Id: uint(delete_id)}
+	deleteId, _ := strconv.Atoi(r.URL.Query().Get("id"))
+	deletepost := Post{Id: uint(deleteId)}
 	// method post is delete post in db
 	if r.Method == "POST" {
+		// session id とpostのuser idが一致するかを確認
 		db := dbConnect()
-		err = db.Delete(&deletepost, delete_id).Error
+		err = db.Delete(&deletepost, deleteId).Error
 		if err != nil {
 			panic(err)
 		}
