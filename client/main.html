@@ -20,6 +20,7 @@
         <div style="border-style: solid; border-color: black; background-color:dimgrey;">
             <p>{{ .Name }} </p>
             <div style=" height: 50px;">{{ .Text }}</div>
+            <a href="/main/delete?id={{ .Id }}">削除する</a>
         </div>
         <br />
     {{ end }}

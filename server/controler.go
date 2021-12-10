@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"net/http"
 	"sort"
+	"strconv"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
@@ -163,4 +164,41 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 	temp.ExecuteTemplate(w, "post", nil)
+}
+
+func deleteHandler(w http.ResponseWriter, r *http.Request) {
+	// session
+	err := checkSession(r, w)
+	if err != nil {
+		http.Redirect(w, r, "/login", http.StatusFound)
+		return
+	}
+	// get delete post id
+	delete_id, _ := strconv.Atoi(r.URL.Query().Get("id"))
+	deletepost := Post{}
+	// method post is delete post in db
+	if r.Method == "POST" {
+		db := dbConnect()
+		err = db.Delete(&deletepost, delete_id).Error
+		if err != nil {
+			panic(err)
+		}
+		defer db.Close()
+		http.Redirect(w, r, "/main", http.StatusFound)
+		return
+	}
+	// method get return html and delete post content
+	// parse
+	temp, err := template.ParseFiles(htmlPath + "post_delete.html")
+	if err != nil {
+		panic(err)
+	}
+	// get delete post id
+	db := dbConnect()
+	err = db.First(&deletepost).Error
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+	temp.ExecuteTemplate(w, "post_delete", deletepost)
 }
