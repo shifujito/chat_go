@@ -23,10 +23,7 @@ func apiUserHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	// var buf bytes.Buffer
 	output, _ := json.MarshalIndent(&apiUsers, "", "\t\t")
-	// enc := json.NewEncoder(&buf)
-	// enc.Encode(apiUsers)
 	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(output)

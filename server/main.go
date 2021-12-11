@@ -15,5 +15,6 @@ func main() {
 	http.HandleFunc("/logout", logoutHandler)
 	http.HandleFunc("/post", postHandler)
 	http.HandleFunc("/users", apiUserHandler)
+	http.HandleFunc("/logins", apiLoginHandler)
 	http.ListenAndServe(":8080", nil)
 }
