@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"errors"
 	"net/http"
 
 	"golang.org/x/crypto/bcrypt"
@@ -47,16 +46,14 @@ func apiLoginHandler(w http.ResponseWriter, r *http.Request) {
 		err := db.Where("name = ?", name).First(&findUser).Error
 		if err != nil {
 			// return 401
-			errors.New("401")
-			w.Write([]byte("{\"hello\": \"not\"}"))
+			w.WriteHeader(401)
 			return
 		}
 		defer db.Close()
 		err = bcrypt.CompareHashAndPassword(findUser.Password, []byte(pass))
 		if err != nil {
 			// return 401
-			errors.New("401")
-			w.Write([]byte("{\"hello\": \"not\"}"))
+			w.WriteHeader(401)
 			return
 		}
 		// sucess

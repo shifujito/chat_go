@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { useHistory, Route }  from "react-router-dom"
 import { apiClient, aCl } from './api-client'
 
+
 type User = {
     id: number
     name: string
@@ -18,6 +19,8 @@ function Login(){
     const [inputname, setInputName] = useState<string>("")
     const [inputpass, setInputPass] = useState<string>("")
 
+    const [showModal, setShowModal] = useState<boolean>(false)
+
     const handleInputName = (e: React.ChangeEvent<HTMLInputElement>) => {
         setInputName(e.target.value)
     }
@@ -28,15 +31,15 @@ function Login(){
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        aCl.post("http://127.0.0.1:8080/logins", {
+        aCl.post("http://127.0.0.1:8080/api/login", {
             name: inputname,
             password: inputpass
         }).then(res => {
             console.log(res)
-            setData(res.data)
             history.push("/main")
         }).catch((err) => {
-            console.log(err.response.status)
+            // 画面遷移しない。
+            setShowModal(true)
         })
     }
 
@@ -44,7 +47,7 @@ function Login(){
         <div>
             <a href="/create">sign up</a>
             <h1>Login</h1>
-            {/* <h2>{{ .Message }}</h2> */}
+            { showModal ? <p>ユーザーネームまたはパスワードが一致しません</p> : null}
             <form onSubmit={handleSubmit}>
                 <div>
                     <label htmlFor="name">User Name</label>
