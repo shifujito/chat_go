@@ -3,9 +3,16 @@ import './App.css'
 import './index.css'
 import { apiClient, aCl } from './api-client'
 import { Route, BrowserRouter }  from "react-router-dom"
+import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import Login from './login'
 import Post from './post';
 
+const theme = extendTheme({
+  config: {
+    initialColorMode: 'dark',
+    useSystemColorMode: false,
+  },
+});
 
 function App() {
   const [count, setCount] = useState(0)
@@ -16,8 +23,10 @@ function App() {
   }
   return (
     <BrowserRouter>
-      <Route path="/login" component={Login}/>
-      <Route path="/main" component={Post}/>
+      <ChakraProvider theme={theme}>
+        <Route path="/login" component={Login}/>
+        <Route path="/main" component={Post}/>
+      </ChakraProvider>
     </BrowserRouter>
   )
 }
