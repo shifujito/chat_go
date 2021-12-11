@@ -17,5 +17,6 @@ func main() {
 	// api handle
 	http.HandleFunc("/api/users", apiUserHandler)
 	http.HandleFunc("/api/login", apiLoginHandler)
+	http.HandleFunc("/api/posts", apiPostsHandler)
 	http.ListenAndServe(":8080", nil)
 }

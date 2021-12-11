@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"net/http"
+	"sort"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -19,6 +20,12 @@ type APILogin struct {
 type UserInfo struct {
 	Id   uint   `json:"id"`
 	Name string `json:"name"`
+}
+
+type APIPosts struct {
+	Name   string `json:"name"`
+	UserId string `json:"userId"`
+	Text   string `json:"text"`
 }
 
 func corsSetup(w http.ResponseWriter) {
@@ -62,4 +69,20 @@ func apiLoginHandler(w http.ResponseWriter, r *http.Request) {
 		w.Write(userInfoJson)
 	}
 
+}
+
+func apiPostsHandler(w http.ResponseWriter, r *http.Request) {
+	corsSetup(w)
+	// 投稿を一覧を渡す。
+	posts := []Post{}
+	db := dbConnect()
+	db.Find(&posts)
+	defer db.Close()
+	// sort create time
+	sort.Slice(posts, func(i, j int) bool { return posts[i].CreatedAt.After(posts[j].CreatedAt) })
+	// user id to user name
+	converPost := allPostIdToName(posts)
+	// strcut to json
+	jsonPost, _ := json.Marshal(converPost)
+	w.Write(jsonPost)
 }

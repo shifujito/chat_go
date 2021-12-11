@@ -9,9 +9,9 @@ import (
 )
 
 type postContent struct {
-	Id   uint
-	Name string
-	Text string
+	Id   uint   `json:"id"`
+	Name string `json:"name"`
+	Text string `json:"text"`
 }
 
 func formValidation(r *http.Request) (err error) {

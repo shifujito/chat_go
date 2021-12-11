@@ -5,7 +5,7 @@ import { apiClient, aCl } from './api-client'
 import { Route, BrowserRouter }  from "react-router-dom"
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import Login from './login'
-import Post from './post';
+import { Post }  from './post';
 import { CreateUser } from './create-user';
 
 const theme = extendTheme({
