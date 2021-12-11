@@ -1,15 +1,19 @@
 import { format } from 'path'
 import { useState } from 'react'
+import { useHistory, Route }  from "react-router-dom"
 import { apiClient, aCl } from './api-client'
 
 type User = {
     id: number
     name: string
+    match: boolean
 }
 
 
 function Login(){
     const [data, setData] = useState<User[]>([])
+
+    const history = useHistory();
 
     const [inputname, setInputName] = useState<string>("")
     const [inputpass, setInputPass] = useState<string>("")
@@ -28,8 +32,11 @@ function Login(){
             name: inputname,
             password: inputpass
         }).then(res => {
-            console.log(res.data)
+            console.log(res)
             setData(res.data)
+            history.push("/main")
+        }).catch((err) => {
+            console.log(err.response.status)
         })
     }
 
@@ -54,3 +61,5 @@ function Login(){
 }
 
 export default Login;
+
+
