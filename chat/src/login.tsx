@@ -22,8 +22,6 @@ type User = {
 };
 
 function Login() {
-  const [data, setData] = useState<User[]>([]);
-
   const history = useHistory();
 
   const [inputname, setInputName] = useState<string>("");
@@ -47,7 +45,6 @@ function Login() {
         password: inputpass,
       })
       .then((res) => {
-        console.log(res);
         history.push("/post");
       })
       .catch((err) => {
