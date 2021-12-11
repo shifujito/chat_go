@@ -1,6 +1,6 @@
 import { format } from "path";
 import { useState } from "react";
-import { useHistory, Route } from "react-router-dom";
+import { useHistory, Link as RouterLink } from "react-router-dom";
 import { apiClient, aCl } from "./api-client";
 import {
   Button,
@@ -48,7 +48,7 @@ function Login() {
       })
       .then((res) => {
         console.log(res);
-        history.push("/main");
+        history.push("/post");
       })
       .catch((err) => {
         // 画面遷移しない。
@@ -66,7 +66,7 @@ function Login() {
             </Heading>
             {showModal ? (
               <Text textAlign={"center"} color="red">
-                ユーザーネームまたはパスワードが一致しません
+                ユーザー名またはパスワードが一致しません
               </Text>
             ) : null}
             <Center bg="#1A202C" color="white" padding="20px">
@@ -95,7 +95,7 @@ function Login() {
                     ログイン
                   </Button>
                   <Text width={"400px"} textAlign={"center"}>
-                    <Link href="/create" color={"blue.400"}>
+                    <Link as={RouterLink} to="/create_user" color={"blue.400"}>
                       アカウントを作成
                     </Link>
                   </Text>

@@ -6,6 +6,7 @@ import { Route, BrowserRouter }  from "react-router-dom"
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import Login from './login'
 import Post from './post';
+import { CreateUser } from './create-user';
 
 const theme = extendTheme({
   config: {
@@ -25,7 +26,8 @@ function App() {
     <BrowserRouter>
       <ChakraProvider theme={theme}>
         <Route path="/login" component={Login}/>
-        <Route path="/main" component={Post}/>
+        <Route path="/post" component={Post}/>
+        <Route path="/create_user" component={CreateUser}/>
       </ChakraProvider>
     </BrowserRouter>
   )

@@ -17,9 +17,8 @@ type APILogin struct {
 }
 
 type UserInfo struct {
-	Id    uint   `json:"id"`
-	Name  string `json:"name"`
-	Match bool   `json"match"`
+	Id   uint   `json:"id"`
+	Name string `json:"name"`
 }
 
 func corsSetup(w http.ResponseWriter) {
@@ -58,7 +57,7 @@ func apiLoginHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		// sucess
 		// give user info
-		userInfo := UserInfo{Id: findUser.ID, Name: findUser.Name, Match: true}
+		userInfo := UserInfo{Id: findUser.ID, Name: findUser.Name}
 		userInfoJson, _ := json.Marshal(userInfo)
 		w.Write(userInfoJson)
 	}
