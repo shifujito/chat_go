@@ -28,8 +28,7 @@ export const Posts: React.VFC = () => {
 
   return (
     <>
-      <HeaderLayout />
-      <p>{singInUser.name}</p>
+      <HeaderLayout name={singInUser.name} isLogined={singInUser.isLogined}/>
       <Stack spacing="0">
         {posts.map((post) => (
           <Box key={post.id}>
