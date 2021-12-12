@@ -28,11 +28,11 @@ export const Posts: React.VFC = () => {
 
   return (
     <>
-      <HeaderLayout name={singInUser.name} isLogined={singInUser.isLogined}/>
+      <HeaderLayout id={singInUser.id} name={singInUser.name} isLogined={singInUser.isLogined}/>
       <Stack spacing="0">
         {posts.map((post) => (
           <Box key={post.id}>
-            <DisplayPost post={post} />
+            <DisplayPost post={post} userId={singInUser.id}/>
           </Box>
         ))}
       </Stack>

@@ -21,5 +21,5 @@ export const titleSelector = selector({
 
 export const singInUserState = atom<loginInfo>({
     key: 'singInUserState',
-    default: {name: 'ユーザーネーム', isLogined: false}
+    default: {id: 0, name: 'ユーザーネーム', isLogined: false}
 })

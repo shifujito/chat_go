@@ -1,6 +1,7 @@
 import { Flex, Heading, Spacer, Stack, Text } from "@chakra-ui/react";
 
 type Props = {
+  id: number
   name:  string
   isLogined: boolean
 }

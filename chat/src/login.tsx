@@ -42,7 +42,7 @@ function Login() {
         password: inputpass,
       })
       .then((res) => {
-        setSignInUser({name: res.data.name, isLogined: true})
+        setSignInUser({id: res.data.id, name: res.data.name, isLogined: true})
         history.push("/posts");
       })
       .catch((err) => {

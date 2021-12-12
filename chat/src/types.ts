@@ -5,6 +5,7 @@ export type Post = {
   }
 
 export type loginInfo = {
+    id: number
     name: string;
     isLogined: boolean
 };
