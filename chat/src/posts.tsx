@@ -5,11 +5,12 @@ import { DisplayPost } from "./components/postContent";
 import { Post } from "./types";
 import { HeaderLayout } from "./components/header";
 import { Stack, Box } from '@chakra-ui/react';
+import { AxiosResponse } from "axios";
 export const Posts: React.VFC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
 
   useEffect(() => {
-    aCl.get("http://127.0.0.1:8080/api/posts").then((res) => {
+    aCl.get<Post[]>("http://127.0.0.1:8080/api/posts").then((res) => {
       setPosts(
         res.data.map((val) => ({
           id: val.id,
