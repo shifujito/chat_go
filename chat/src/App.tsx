@@ -5,7 +5,7 @@ import { apiClient, aCl } from './api-client'
 import { Route, BrowserRouter }  from "react-router-dom"
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import Login from './login'
-import { Post }  from './post';
+import { Posts }  from './posts';
 import { CreateUser } from './create-user';
 
 const theme = extendTheme({
@@ -26,7 +26,7 @@ function App() {
     <BrowserRouter>
       <ChakraProvider theme={theme}>
         <Route path="/login" component={Login}/>
-        <Route path="/post" component={Post}/>
+        <Route path="/posts" component={Posts}/>
         <Route path="/create_user" component={CreateUser}/>
       </ChakraProvider>
     </BrowserRouter>
