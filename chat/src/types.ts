@@ -3,3 +3,8 @@ export type Post = {
     name: string
     text: string
   }
+
+export type loginInfo = {
+    name: string;
+    isLogined: boolean
+};

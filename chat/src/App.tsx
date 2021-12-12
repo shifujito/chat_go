@@ -7,8 +7,7 @@ import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import Login from './login'
 import { Posts }  from './posts';
 import { CreateUser } from './create-user';
-import { Provider, useSelector } from 'react-redux'
-import { store } from "./createStore"
+import { RecoilRoot } from 'recoil'
 
 const theme = extendTheme({
   config: {
@@ -16,6 +15,8 @@ const theme = extendTheme({
     useSystemColorMode: false,
   },
 });
+
+
 
 function App() {
   const [count, setCount] = useState(0)
@@ -25,7 +26,7 @@ function App() {
     // apiClient.users.get().then(res => {console.log(res)})
   }
   return (
-    <Provider store={store}>
+    <RecoilRoot>
       <BrowserRouter>
         <ChakraProvider theme={theme}>
           <Route path="/login" component={Login}/>
@@ -33,7 +34,7 @@ function App() {
           <Route path="/create_user" component={CreateUser}/>
         </ChakraProvider>
       </BrowserRouter>
-    </Provider>
+    </RecoilRoot>
 
   )
 }

@@ -1,7 +1,8 @@
-import { format } from "path";
 import { useState } from "react";
 import { useHistory, Link as RouterLink } from "react-router-dom";
 import { apiClient, aCl } from "./api-client";
+import { useRecoilState } from "recoil";
+import { singInUserState } from './atom'
 import {
   Button,
   Input,
@@ -14,12 +15,6 @@ import {
   FormLabel,
   Text,
 } from "@chakra-ui/react";
-
-type User = {
-  id: number;
-  name: string;
-  match: boolean;
-};
 
 function Login() {
   const history = useHistory();
@@ -37,6 +32,8 @@ function Login() {
     setInputPass(e.target.value);
   };
 
+  const [signInUser, setSignInUser] = useRecoilState(singInUserState);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     aCl
@@ -45,6 +42,7 @@ function Login() {
         password: inputpass,
       })
       .then((res) => {
+        setSignInUser({name: res.data.name, isLogined: true})
         history.push("/posts");
       })
       .catch((err) => {
