@@ -23,7 +23,7 @@ export const Posts: React.VFC = () => {
   return (
     <>
       <HeaderLayout />
-      <Stack spacing="0" height={""}>
+      <Stack spacing="0">
         {posts.map((post) => (
           <Box key={post.id}>
             <DisplayPost post={post} />
