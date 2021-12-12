@@ -10,6 +10,7 @@ type Post = {
 
 export const Post: React.VFC = () => {
   const [posts, setPosts] = useState<Post[]>([])
+
   useEffect(() => {
     aCl.get("http://127.0.0.1:8080/api/posts").then((res) => {
       setPosts(res.data.map((val) => ({
@@ -20,15 +21,14 @@ export const Post: React.VFC = () => {
     })}
     ,[])
 
-  console.log(posts)
-  // const [posts, setPosts] = useState<Post[]>([])
-
-  // const allPosts = () => {
-  //   aCl.get("http://127.0.0.1:8080/api/posts").then((res) => {
-  //       // setPosts([...posts, res.data[0]])
-  //       console.log(posts)
-  //     }
-  //   )
-  // }
-  return <h2>Hello</h2>;
+  return (
+    <div>
+      {posts.map((post) => (
+        <div key={post.id}>
+          <p >{post.name}</p>
+          <div>{post.text}</div>
+        </div>
+      ))}
+    </div>
+  )
 };
