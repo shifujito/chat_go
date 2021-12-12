@@ -5,7 +5,8 @@ import { DisplayPost } from "./components/postContent";
 import { Post } from "./types";
 import { HeaderLayout } from "./components/header";
 import { Stack, Box } from '@chakra-ui/react';
-import { AxiosResponse } from "axios";
+
+
 export const Posts: React.VFC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
 

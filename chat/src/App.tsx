@@ -7,6 +7,8 @@ import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import Login from './login'
 import { Posts }  from './posts';
 import { CreateUser } from './create-user';
+import { Provider, useSelector } from 'react-redux'
+import { store } from "./createStore"
 
 const theme = extendTheme({
   config: {
@@ -23,14 +25,18 @@ function App() {
     // apiClient.users.get().then(res => {console.log(res)})
   }
   return (
-    <BrowserRouter>
-      <ChakraProvider theme={theme}>
-        <Route path="/login" component={Login}/>
-        <Route path="/posts" component={Posts}/>
-        <Route path="/create_user" component={CreateUser}/>
-      </ChakraProvider>
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <ChakraProvider theme={theme}>
+          <Route path="/login" component={Login}/>
+          <Route path="/posts" component={Posts}/>
+          <Route path="/create_user" component={CreateUser}/>
+        </ChakraProvider>
+      </BrowserRouter>
+    </Provider>
+
   )
 }
 
 export default App
+
