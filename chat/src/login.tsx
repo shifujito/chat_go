@@ -45,7 +45,7 @@ function Login() {
         password: inputpass,
       })
       .then((res) => {
-        history.push("/post");
+        history.push("/posts");
       })
       .catch((err) => {
         // 画面遷移しない。
