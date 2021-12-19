@@ -20,8 +20,12 @@ type Props = {
 export const PostIcons: React.VFC<Props> = ({ loginUserName, postName }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const handleClick: React.MouseEventHandler<HTMLButtonElement> = () => {
-    isOpen ? setIsOpen(false) : setIsOpen(true);
+  const handleOpenClick: React.MouseEventHandler<HTMLButtonElement> = () => {
+    setIsOpen(true);
+  };
+
+  const handleCloseClick = () => {
+    setIsOpen(false);
   };
 
   return (
@@ -34,12 +38,17 @@ export const PostIcons: React.VFC<Props> = ({ loginUserName, postName }) => {
           size="xs"
           variant="outline"
           mr={2}
-          onClick={handleClick}
+          onClick={handleOpenClick}
         >
           削除
         </Button>
       ) : null}
-      <Modal isOpen={isOpen} onClose={() => {}} size={"xs"}>
+      <Modal
+        isOpen={isOpen}
+        closeOnOverlayClick={true}
+        onClose={handleCloseClick}
+        size={"xs"}
+      >
         <ModalOverlay />
         <ModalContent paddingLeft={"20px"} paddingTop={"20px"}>
           <Text>本当に削除しますか？</Text>
@@ -48,11 +57,11 @@ export const PostIcons: React.VFC<Props> = ({ loginUserName, postName }) => {
               size={"xs"}
               mr={3}
               colorScheme={"red"}
-              onClick={handleClick}
+              onClick={handleCloseClick}
             >
               削除
             </Button>
-            <Button size={"xs"} onClick={handleClick}>
+            <Button size={"xs"} onClick={handleCloseClick}>
               戻る
             </Button>
           </ModalFooter>
