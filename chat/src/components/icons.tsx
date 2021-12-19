@@ -40,7 +40,7 @@ export const PostIcons: React.VFC<Props> = ({ loginUserName, postName }) => {
         </Button>
       ) : null}
       <Modal isOpen={isOpen} onClose={() => {}} size={"xs"}>
-        {/* <ModalOverlay /> */}
+        <ModalOverlay />
         <ModalContent paddingLeft={"20px"} paddingTop={"20px"}>
           <Text>本当に削除しますか？</Text>
           <ModalFooter>
