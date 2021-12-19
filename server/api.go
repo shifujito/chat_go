@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 	"sort"
+	"strconv"
+	"strings"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -85,4 +87,21 @@ func apiPostsHandler(w http.ResponseWriter, r *http.Request) {
 	// strcut to json
 	jsonPost, _ := json.Marshal(converPost)
 	w.Write(jsonPost)
+}
+
+func apiPostDeleteHandler(w http.ResponseWriter, r *http.Request) {
+	corsSetup(w)
+	if r.Method == "DELETE" {
+		pathList := strings.Split(r.URL.Path, "/")
+		deleteId, _ := strconv.Atoi(pathList[len(pathList)-1])
+		deletepost := Post{Id: uint(deleteId)}
+		db := dbConnect()
+		err := db.Delete(&deletepost, deleteId).Error
+		if err != nil {
+			panic(err)
+		}
+		defer db.Close()
+		w.WriteHeader(http.StatusOK)
+		return
+	}
 }

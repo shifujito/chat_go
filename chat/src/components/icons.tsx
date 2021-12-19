@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Post } from "../types";
 import {
   Modal,
   ModalOverlay,
@@ -11,13 +12,14 @@ import {
   Text,
   Button,
 } from "@chakra-ui/react";
+import { aCl } from "../api-client";
 
 type Props = {
-  postName: string;
+  post: Post;
   loginUserName: string;
 };
 
-export const PostIcons: React.VFC<Props> = ({ loginUserName, postName }) => {
+export const PostIcons: React.VFC<Props> = ({ loginUserName, post }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const handleOpenClick: React.MouseEventHandler<HTMLButtonElement> = () => {
@@ -28,11 +30,17 @@ export const PostIcons: React.VFC<Props> = ({ loginUserName, postName }) => {
     setIsOpen(false);
   };
 
+  const handleDeletePostAndCloseClick = () => {
+    // post methodをよぶ
+    aCl.delete<Post>(`http://127.0.0.1:8080/api/post/delete/${post.id}`);
+    setIsOpen(false);
+  };
+
   return (
     <HStack>
       <Text>いいね</Text>
       <Text>リツイート</Text>
-      {loginUserName == postName ? (
+      {loginUserName == post.name ? (
         <Button
           colorScheme="red"
           size="xs"
@@ -57,7 +65,7 @@ export const PostIcons: React.VFC<Props> = ({ loginUserName, postName }) => {
               size={"xs"}
               mr={3}
               colorScheme={"red"}
-              onClick={handleCloseClick}
+              onClick={handleDeletePostAndCloseClick}
             >
               削除
             </Button>
