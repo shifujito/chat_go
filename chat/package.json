@@ -25,6 +25,7 @@
     "react-redux": "^7.2.6",
     "react-router-dom": "5",
     "recoil": "^0.5.2",
+    "recoil-persist": "^4.0.0",
     "redux": "^4.1.2",
     "redux-logger": "^3.0.6",
     "ts-node": "^10.4.0"

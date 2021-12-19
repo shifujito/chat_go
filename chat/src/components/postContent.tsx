@@ -4,11 +4,11 @@ import { Center, VStack, Text, Stack } from "@chakra-ui/react";
 import { PostIcons } from './icons';
 
 type Props = {
-  userId: number
+  loginUserName: string
   post: Post;
 };
 
-export const DisplayPost: React.VFC<Props> = ({post, userId}) => {
+export const DisplayPost: React.VFC<Props> = ({post, loginUserName}) => {
   return (
     <Center>
        <VStack border={"solid 2px white"} borderTop={"0"} width={"50%"} align={"left"} paddingLeft={"20px"}>
@@ -16,7 +16,7 @@ export const DisplayPost: React.VFC<Props> = ({post, userId}) => {
           <Text>@ {post.name}</Text>
           <Text>{post.text}</Text>
         </Stack>
-        <PostIcons postUserId={post.id} userId={userId}/>
+        <PostIcons postName={post.name} loginUserName={loginUserName}/>
       </VStack>
     </Center>
   );

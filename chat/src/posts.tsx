@@ -32,7 +32,7 @@ export const Posts: React.VFC = () => {
       <Stack spacing="0">
         {posts.map((post) => (
           <Box key={post.id}>
-            <DisplayPost post={post} userId={singInUser.id}/>
+            <DisplayPost post={post} loginUserName={singInUser.name}/>
           </Box>
         ))}
       </Stack>
