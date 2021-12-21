@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useHistory, Link as RouterLink } from "react-router-dom";
 import { apiClient, aCl } from "./api-client";
 import { useRecoilState } from "recoil";
-import { singInUserState } from './atom'
+import { singInUserState } from "./atom";
 import {
   Button,
   Input,
@@ -42,7 +42,11 @@ function Login() {
         password: inputpass,
       })
       .then((res) => {
-        setSignInUser({id: res.data.id, name: res.data.name, isLogined: true})
+        setSignInUser({
+          id: res.data.id,
+          name: res.data.name,
+          isLogined: true,
+        });
         history.push("/posts");
       })
       .catch((err) => {
