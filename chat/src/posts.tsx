@@ -34,7 +34,7 @@ export const Posts: React.VFC = () => {
         isLogined={singInUser.isLogined}
       />
       <Stack spacing="0">
-        <CreatePost />
+        <CreatePost loginUser={singInUser} />
         {posts.map((post) => (
           <Box key={post.id}>
             <DisplayPost post={post} loginUserName={singInUser.name} />

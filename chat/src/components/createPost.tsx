@@ -1,6 +1,8 @@
 import React from "react";
 import { useState } from "react";
+import { useHistory } from "react-router-dom";
 import { aCl } from "../api-client";
+import { loginInfo } from "../types";
 import {
   Textarea,
   Center,
@@ -12,7 +14,12 @@ import {
   FormControl,
 } from "@chakra-ui/react";
 
-export const CreatePost: React.VFC = () => {
+type Porps = {
+  loginUser: loginInfo;
+};
+
+export const CreatePost: React.VFC<Porps> = ({ loginUser }) => {
+  const history = useHistory();
   const [postContent, setPostContent] = useState<string>("");
 
   const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -21,22 +28,24 @@ export const CreatePost: React.VFC = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    aCl.post("http://127.0.0.1:8080/api/cratepost", {
-      // userId　1 => kimura
-      userId: 1,
-      content: postContent,
-    });
+    aCl
+      .post("http://localhost:8080/api/post/create", {
+        userId: loginUser.id,
+        content: postContent,
+      })
+      .then((res) => {
+        history.push("/post");
+      });
   };
 
   return (
     <Center>
       <Stack borderTop={"0"} width={"50%"} border={"solid 3px skyblue"}>
-        {/* <form onSubmit={hadleSubmit}> */}
-        <form>
+        <form onSubmit={handleSubmit}>
           <FormControl isRequired>
             <Textarea
               minHeight={"125px"}
-              placeholder="投稿内容"
+              placeholder="What are you doing now?"
               border={"none"}
               onChange={handleInput}
             />

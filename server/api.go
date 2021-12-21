@@ -6,6 +6,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -28,6 +29,11 @@ type APIPosts struct {
 	Name   string `json:"name"`
 	UserId string `json:"userId"`
 	Text   string `json:"text"`
+}
+
+type PostContent struct {
+	UserId  uint   `json:"userId"`
+	Content string `json:"content"`
 }
 
 func corsSetup(w http.ResponseWriter) {
@@ -101,6 +107,28 @@ func apiPostDeleteHandler(w http.ResponseWriter, r *http.Request) {
 			panic(err)
 		}
 		defer db.Close()
+		w.WriteHeader(http.StatusOK)
+		return
+	}
+}
+
+func apiPostCreateHandler(w http.ResponseWriter, r *http.Request) {
+	corsSetup(w)
+	if r.Method == "POST" {
+		var postContent PostContent
+		body := make([]byte, r.ContentLength)
+		r.Body.Read(body)
+		json.Unmarshal(body, &postContent)
+		// connect db confirm name password same
+		userId := postContent.UserId
+		text := postContent.Content
+		createPost := Post{UserId: userId, Text: text, CreatedAt: time.Now()}
+		db := dbConnect()
+		err := db.Create(&createPost).Error
+		defer db.Close()
+		if err != nil {
+			panic(err)
+		}
 		w.WriteHeader(http.StatusOK)
 		return
 	}
