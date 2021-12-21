@@ -14,6 +14,19 @@ export const Posts: React.VFC = () => {
   const sample = useRecoilValue(titleSelector);
   const singInUser = useRecoilValue(singInUserState);
 
+  const handleDelete = (id: number) => {
+    setPosts(posts.filter((post) => post.id !== id));
+    // aCl.get<Post[]>("http://127.0.0.1:8080/api/posts").then((res) => {
+    //   setPosts(
+    //     res.data.map((val) => ({
+    //       id: val.id,
+    //       name: val.name,
+    //       text: val.text,
+    //     }))
+    //   );
+    // });
+  };
+
   useEffect(() => {
     aCl.get<Post[]>("http://127.0.0.1:8080/api/posts").then((res) => {
       setPosts(
@@ -37,7 +50,11 @@ export const Posts: React.VFC = () => {
         <CreatePost loginUser={singInUser} />
         {posts.map((post) => (
           <Box key={post.id}>
-            <DisplayPost post={post} loginUserName={singInUser.name} />
+            <DisplayPost
+              post={post}
+              loginUserName={singInUser.name}
+              onDelete={handleDelete}
+            />
           </Box>
         ))}
       </Stack>

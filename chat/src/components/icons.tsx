@@ -4,10 +4,7 @@ import {
   Modal,
   ModalOverlay,
   ModalContent,
-  ModalHeader,
   ModalFooter,
-  ModalBody,
-  ModalCloseButton,
   HStack,
   Text,
   Button,
@@ -17,9 +14,14 @@ import { aCl } from "../api-client";
 type Props = {
   post: Post;
   loginUserName: string;
+  onDelete: (postId: number) => void;
 };
 
-export const PostIcons: React.VFC<Props> = ({ loginUserName, post }) => {
+export const PostIcons: React.VFC<Props> = ({
+  loginUserName,
+  post,
+  onDelete,
+}) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const handleOpenClick: React.MouseEventHandler<HTMLButtonElement> = () => {
@@ -32,8 +34,16 @@ export const PostIcons: React.VFC<Props> = ({ loginUserName, post }) => {
 
   const handleDeletePostAndCloseClick = () => {
     // post methodをよぶ
-    aCl.delete<Post>(`http://127.0.0.1:8080/api/post/delete/${post.id}`);
+    // onDelete(post.id);
     setIsOpen(false);
+    aCl
+      .delete<Post>(`http://127.0.0.1:8080/api/post/delete/${post.id}`)
+      .then((res) => {
+        onDelete(post.id);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (

@@ -34,7 +34,7 @@ export const CreatePost: React.VFC<Porps> = ({ loginUser }) => {
         content: postContent,
       })
       .then((res) => {
-        history.push("/post");
+        history.push("/posts");
       });
   };
 
