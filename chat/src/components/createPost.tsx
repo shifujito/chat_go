@@ -16,9 +16,10 @@ import {
 
 type Porps = {
   loginUser: loginInfo;
+  onCreate: () => void;
 };
 
-export const CreatePost: React.VFC<Porps> = ({ loginUser }) => {
+export const CreatePost: React.VFC<Porps> = ({ loginUser, onCreate }) => {
   const history = useHistory();
   const [postContent, setPostContent] = useState<string>("");
 
@@ -34,7 +35,8 @@ export const CreatePost: React.VFC<Porps> = ({ loginUser }) => {
         content: postContent,
       })
       .then((res) => {
-        history.push("/posts");
+        onCreate();
+        setPostContent("");
       });
   };
 
@@ -48,6 +50,7 @@ export const CreatePost: React.VFC<Porps> = ({ loginUser }) => {
               placeholder="What are you doing now?"
               border={"none"}
               onChange={handleInput}
+              value={postContent}
             />
           </FormControl>
           <Divider />

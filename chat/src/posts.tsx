@@ -16,15 +16,18 @@ export const Posts: React.VFC = () => {
 
   const handleDelete = (id: number) => {
     setPosts(posts.filter((post) => post.id !== id));
-    // aCl.get<Post[]>("http://127.0.0.1:8080/api/posts").then((res) => {
-    //   setPosts(
-    //     res.data.map((val) => ({
-    //       id: val.id,
-    //       name: val.name,
-    //       text: val.text,
-    //     }))
-    //   );
-    // });
+  };
+
+  const handelPostCreate = () => {
+    aCl.get<Post[]>("http://127.0.0.1:8080/api/posts").then((res) => {
+      setPosts(
+        res.data.map((val) => ({
+          id: val.id,
+          name: val.name,
+          text: val.text,
+        }))
+      );
+    });
   };
 
   useEffect(() => {
@@ -47,7 +50,7 @@ export const Posts: React.VFC = () => {
         isLogined={singInUser.isLogined}
       />
       <Stack spacing="0">
-        <CreatePost loginUser={singInUser} />
+        <CreatePost loginUser={singInUser} onCreate={handelPostCreate} />
         {posts.map((post) => (
           <Box key={post.id}>
             <DisplayPost
