@@ -56,7 +56,7 @@ function Login() {
   };
 
   return (
-    <div>
+    <>
       <Box w="100%" p={8}>
         <Center w="100%">
           <Stack spacing="5">
@@ -104,7 +104,7 @@ function Login() {
           </Stack>
         </Center>
       </Box>
-    </div>
+    </>
   );
 }
 
