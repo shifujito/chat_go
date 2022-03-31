@@ -180,7 +180,7 @@ func deleteHandler(w http.ResponseWriter, r *http.Request) {
 	// method post is delete post in db
 	if r.Method == "POST" {
 
-		// session id とpostのuser idが一致するかを確認
+		// session id とpostのuser idが一致するかを確認する
 		err := checkPostDeleteUser(r, deleteId)
 		if err != nil {
 			w.WriteHeader(403)
