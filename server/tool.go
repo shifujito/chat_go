@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/shifujito/chat_go/server/model"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -32,8 +33,8 @@ func getHashPassword(r *http.Request) []byte {
 }
 
 func getUserName(id uint) (userName string) {
-	findName := User{}
-	db := dbConnect()
+	findName := model.User{}
+	db := model.DbConnect()
 	db.Where("id = ? ", id).First(&findName)
 	userName = findName.Name
 	defer db.Close()
@@ -46,7 +47,7 @@ func getUserId(r *http.Request) (userId uint) {
 	return userId
 }
 
-func allPostIdToName(posts []Post) (newPosts []postContent) {
+func allPostIdToName(posts []model.Post) (newPosts []postContent) {
 	for _, post := range posts {
 		name := getUserName(post.UserId)
 		rows := postContent{Id: post.Id, Name: name, Text: post.Text}
@@ -59,9 +60,9 @@ func checkPostDeleteUser(r *http.Request, deleteId int) (err error) {
 	// session login
 	sessionId := getUserId(r)
 	// delete id
-	deletePost := Post{Id: uint(deleteId)}
+	deletePost := model.Post{Id: uint(deleteId)}
 	// db connect
-	db := dbConnect()
+	db := model.DbConnect()
 	err = db.First(&deletePost).Error
 	if err != nil {
 		fmt.Println(err)

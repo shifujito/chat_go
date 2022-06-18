@@ -8,6 +8,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/shifujito/chat_go/server/model"
+
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -53,10 +55,10 @@ func apiLoginHandler(w http.ResponseWriter, r *http.Request) {
 		var loginInfo APILogin
 		json.Unmarshal(body, &loginInfo)
 		// connect db confirm name password same
-		var findUser User
+		var findUser model.User
 		name := loginInfo.Name
 		pass := loginInfo.Password
-		db := model.dbConnect()
+		db := model.DbConnect()
 		err := db.Where("name = ?", name).First(&findUser).Error
 		if err != nil {
 			// return 401
@@ -82,8 +84,8 @@ func apiLoginHandler(w http.ResponseWriter, r *http.Request) {
 func apiPostsHandler(w http.ResponseWriter, r *http.Request) {
 	corsSetup(w)
 	// 投稿を一覧を渡す。
-	posts := []Post{}
-	db := dbConnect()
+	posts := []model.Post{}
+	db := model.DbConnect()
 	db.Find(&posts)
 	defer db.Close()
 	// sort create time
@@ -100,8 +102,8 @@ func apiPostDeleteHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "DELETE" {
 		pathList := strings.Split(r.URL.Path, "/")
 		deleteId, _ := strconv.Atoi(pathList[len(pathList)-1])
-		deletepost := Post{Id: uint(deleteId)}
-		db := dbConnect()
+		deletepost := model.Post{Id: uint(deleteId)}
+		db := model.DbConnect()
 		err := db.Delete(&deletepost, deleteId).Error
 		if err != nil {
 			panic(err)
@@ -122,8 +124,8 @@ func apiPostCreateHandler(w http.ResponseWriter, r *http.Request) {
 		// connect db confirm name password same
 		userId := postContent.UserId
 		text := postContent.Content
-		createPost := Post{UserId: userId, Text: text, CreatedAt: time.Now()}
-		db := dbConnect()
+		createPost := model.Post{UserId: userId, Text: text, CreatedAt: time.Now()}
+		db := model.DbConnect()
 		err := db.Create(&createPost).Error
 		defer db.Close()
 		if err != nil {

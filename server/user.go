@@ -3,6 +3,8 @@ package main
 import (
 	"encoding/json"
 	"net/http"
+
+	"github.com/shifujito/chat_go/server/model"
 )
 
 type APIUser struct {
@@ -12,9 +14,9 @@ type APIUser struct {
 
 func apiUserHandler(w http.ResponseWriter, r *http.Request) {
 	// jsonをかえす。
-	users := []User{}
+	users := []model.User{}
 	apiUsers := []APIUser{}
-	db := dbConnect()
+	db := model.DbConnect()
 	// db.Select("id, name").Find(&users)
 	db.Find(&users)
 	for _, val := range users {

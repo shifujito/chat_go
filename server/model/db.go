@@ -40,7 +40,7 @@ func init() {
 
 }
 
-func dbConnect() (db *gorm.DB) {
+func DbConnect() (db *gorm.DB) {
 	db, err := gorm.Open("postgres", "host=postgres port=5432 user=postgres dbname=chat password=chat sslmode=disable")
 	if err != nil {
 		log.Fatalln("not connect", err)

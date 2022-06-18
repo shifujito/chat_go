@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/shifujito/chat_go/server/model"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -38,10 +39,10 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		// user name passwordが正しいかを確認。
-		db := dbConnect()
+		db := model.DbConnect()
 		name := r.PostFormValue("name")
 		password := r.PostFormValue("password")
-		var findUser User
+		var findUser model.User
 		db.Where("name = ? ", name).First(&findUser)
 		defer db.Close()
 		err = bcrypt.CompareHashAndPassword(findUser.Password, []byte(password))
@@ -80,8 +81,8 @@ func createHandler(w http.ResponseWriter, r *http.Request) {
 		// name はユニークかどうか
 		name := r.PostFormValue("name")
 		hashedPassword := getHashPassword(r)
-		insertUser := User{Name: name, Password: hashedPassword}
-		db := dbConnect()
+		insertUser := model.User{Name: name, Password: hashedPassword}
+		db := model.DbConnect()
 		err = db.Create(&insertUser).Error
 		if err != nil {
 			fmt.Println("can not isert data", err)
@@ -112,8 +113,8 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 	// 投稿内容とその人の名前を表示
-	db := dbConnect()
-	allPost := []Post{}
+	db := model.DbConnect()
+	allPost := []model.Post{}
 	db.Find(&allPost)
 	defer db.Close()
 	// allpost の　id t0 username
@@ -151,8 +152,8 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 		// 	// post dbに保存する。
 		text := r.PostFormValue("content")
 		userId := getUserId(r)
-		postContent := Post{UserId: userId, Text: text, CreatedAt: time.Now()}
-		db := dbConnect()
+		postContent := model.Post{UserId: userId, Text: text, CreatedAt: time.Now()}
+		db := model.DbConnect()
 		err = db.Create(&postContent).Error
 		defer db.Close()
 		if err != nil {
@@ -176,7 +177,7 @@ func deleteHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	// get delete post id
 	deleteId, _ := strconv.Atoi(r.URL.Query().Get("id"))
-	deletepost := Post{Id: uint(deleteId)}
+	deletepost := model.Post{Id: uint(deleteId)}
 	// method post is delete post in db
 	if r.Method == "POST" {
 
@@ -191,7 +192,7 @@ func deleteHandler(w http.ResponseWriter, r *http.Request) {
 			temp.ExecuteTemplate(w, "403", nil)
 			return
 		}
-		db := dbConnect()
+		db := model.DbConnect()
 		err = db.Delete(&deletepost, deleteId).Error
 		if err != nil {
 			panic(err)
@@ -207,7 +208,7 @@ func deleteHandler(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 	// get delete post id
-	db := dbConnect()
+	db := model.DbConnect()
 	err = db.First(&deletepost).Error
 	if err != nil {
 		panic(err)
@@ -228,8 +229,8 @@ func findUserHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
-	users := []User{}
-	db := dbConnect()
+	users := []model.User{}
+	db := model.DbConnect()
 	// 自分以外
 	loginId := getUserId(r)
 	db.Not("id = ?", loginId).Find(&users)
