@@ -56,7 +56,7 @@ func apiLoginHandler(w http.ResponseWriter, r *http.Request) {
 		var findUser User
 		name := loginInfo.Name
 		pass := loginInfo.Password
-		db := dbConnect()
+		db := model.dbConnect()
 		err := db.Where("name = ?", name).First(&findUser).Error
 		if err != nil {
 			// return 401
