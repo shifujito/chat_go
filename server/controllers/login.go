@@ -21,14 +21,6 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func corsSetup(w http.ResponseWriter) {
-	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	w.Header().Add("Access-Control-Allow-Credentials", "true")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
-	w.Header().Set("Content-Type", "application/json")
-}
-
 func checkNameAndPassword(w http.ResponseWriter, r *http.Request) {
 	var tryLoginUser TryLoginUser
 	var findUser model.User
@@ -58,7 +50,7 @@ func checkNameAndPassword(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// 一致した場合ログイン情報をjsonで返す
-	loginUser := User{Id: findUser.ID, Name: findUser.Name}
+	loginUser := model.UserInfo{Id: findUser.ID, Name: findUser.Name}
 	loginUserJson, _ := json.Marshal(loginUser)
 	w.Write(loginUserJson)
 
