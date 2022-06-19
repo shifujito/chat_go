@@ -7,7 +7,7 @@ import (
 	"github.com/shifujito/chat_go/server/model"
 )
 
-type APIUser struct {
+type User struct {
 	Id   uint   `json:"id"`
 	Name string `json:"name"`
 }
@@ -20,17 +20,17 @@ func UserHandler(w http.ResponseWriter, r *http.Request) {
 
 func findAllUser(w http.ResponseWriter) {
 	// jsonをかえす。
-	users := []model.User{}
-	apiUsers := []APIUser{}
+	modelUsers := []model.User{}
+	users := []User{}
 	db := model.DbConnect()
-	db.Find(&users)
-	for _, val := range users {
-		apiUser := APIUser{Id: val.ID, Name: val.Name}
-		apiUsers = append(apiUsers, apiUser)
+	db.Find(&modelUsers)
+	for _, val := range modelUsers {
+		user := User{Id: val.ID, Name: val.Name}
+		users = append(users, user)
 	}
 	defer db.Close()
 
-	output, _ := json.MarshalIndent(&apiUsers, "", "\t\t")
+	output, _ := json.MarshalIndent(&users, "", "\t\t")
 	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(output)
