@@ -21,20 +21,17 @@ docker exec -it chat_go-go_chat-1 sh
 ```
 .
 ├── Dockerfile
-├── api.go
 ├── bin
 │   └── wait.sh
-├── controler.go
+├── controllers
+│   ├── router.go
+│   └── users.go
 ├── main.go
 ├── model
-├── model.go
-├── router
-├── session.go
-├── tmp
-│   ├── build-errors.log
-│   └── main
-├── tool.go
-└── user.go
+│   └── db.go
+└── tmp
+    ├── build-errors.log
+    └── main
 ```
 
 - router ディレクトリは api リクエストを書きます。
