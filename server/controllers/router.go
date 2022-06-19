@@ -5,7 +5,7 @@ import "net/http"
 func Run() {
 	http.HandleFunc("/users", UserHandler)
 	http.HandleFunc("/login", LoginHandler)
-	http.HandleFunc("/post", PostHandler)
+	http.HandleFunc("/posts", PostHandler)
 	http.ListenAndServe(":8080", nil)
 }
 
