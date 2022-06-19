@@ -37,7 +37,7 @@ function Login() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     aCl
-      .post("http://127.0.0.1:8080/api/login", {
+      .post("http://127.0.0.1:8080/login", {
         name: inputname,
         password: inputpass,
       })

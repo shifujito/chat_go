@@ -5,24 +5,18 @@ import (
 	"net/http"
 
 	"github.com/shifujito/chat_go/server/model"
-	"golang.org/x/crypto/bcrypt"
 )
-
-type TryLoginUser struct {
-	Name     string `json:"name"`
-	Password string `json:"password"`
-}
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	corsSetup(w)
 	if r.Method == "POST" {
-		checkNameAndPassword(w, r)
+		postLogin(w, r)
 	}
 
 }
 
-func checkNameAndPassword(w http.ResponseWriter, r *http.Request) {
-	var tryLoginUser TryLoginUser
+func postLogin(w http.ResponseWriter, r *http.Request) {
+	var tryLoginUser model.TryLoginUser
 	var findUser model.User
 
 	// bodyの中身を取得
@@ -33,19 +27,8 @@ func checkNameAndPassword(w http.ResponseWriter, r *http.Request) {
 	json.Unmarshal(body, &tryLoginUser)
 
 	// dbに接続
-	db := model.DbConnect()
-	// 名前から名前とパスワードを取得
-	err := db.Where("name = ?", tryLoginUser.Name).First(&findUser).Error
+	err := model.CheckNameAndPassword(tryLoginUser, &findUser)
 	if err != nil {
-		// return 401
-		w.WriteHeader(401)
-		return
-	}
-	defer db.Close()
-	// パスワードが一致するか確認
-	err = bcrypt.CompareHashAndPassword(findUser.Password, []byte(tryLoginUser.Password))
-	if err != nil {
-		// return 401
 		w.WriteHeader(401)
 		return
 	}
