@@ -1,4 +1,4 @@
-package main
+package controllers
 
 import (
 	"encoding/json"
@@ -12,12 +12,17 @@ type APIUser struct {
 	Name string `json:"name"`
 }
 
-func apiUserHandler(w http.ResponseWriter, r *http.Request) {
+func UserHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "GET" {
+		findAllUser(w)
+	}
+}
+
+func findAllUser(w http.ResponseWriter) {
 	// jsonをかえす。
 	users := []model.User{}
 	apiUsers := []APIUser{}
 	db := model.DbConnect()
-	// db.Select("id, name").Find(&users)
 	db.Find(&users)
 	for _, val := range users {
 		apiUser := APIUser{Id: val.ID, Name: val.Name}
@@ -29,4 +34,5 @@ func apiUserHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(output)
+
 }
