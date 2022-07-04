@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"encoding/json"
+	"fmt"
 	"net/http"
 	"sort"
 
@@ -23,8 +25,9 @@ func getPost(w http.ResponseWriter) {
 	// sort create time
 	sort.Slice(posts, func(i, j int) bool { return posts[i].CreatedAt.After(posts[j].CreatedAt) })
 	// user id to user name
+	fmt.Println(posts)
 	// convertPost := allPostIdToName(posts)
-	// // strcut to json
-	// jsonPost, _ := json.Marshal(convertPost)
-	// w.Write(jsonPost)
+	// strcut to json
+	jsonPost, _ := json.Marshal(posts)
+	w.Write(jsonPost)
 }

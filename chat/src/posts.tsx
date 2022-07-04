@@ -32,6 +32,7 @@ export const Posts: React.VFC = () => {
 
   useEffect(() => {
     aCl.get<Post[]>("http://127.0.0.1:8080/posts").then((res) => {
+      console.log(res);
       setPosts(
         res.data.map((val) => ({
           id: val.id,
