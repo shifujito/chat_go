@@ -22,9 +22,9 @@ export const Posts: React.VFC = () => {
     aCl.get<Post[]>("http://127.0.0.1:8080/posts").then((res) => {
       setPosts(
         res.data.map((val) => ({
-          id: val.Id,
-          name: val.Name,
-          text: val.Text,
+          id: val.id,
+          name: val.name,
+          text: val.text,
         }))
       );
     });
@@ -35,9 +35,9 @@ export const Posts: React.VFC = () => {
       console.log(res);
       setPosts(
         res.data.map((val) => ({
-          id: val.Id,
-          name: val.Name,
-          text: val.Text,
+          id: val.id,
+          name: val.name,
+          text: val.text,
         }))
       );
     });

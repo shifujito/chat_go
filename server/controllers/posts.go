@@ -8,9 +8,9 @@ import (
 )
 
 type PostJoinUser struct {
-	Id   uint
-	Name string
-	Text string
+	Id   uint   `json:"id"`
+	Name string `json:"name"`
+	Text string `json:"text"`
 }
 
 func PostHandler(w http.ResponseWriter, r *http.Request) {
