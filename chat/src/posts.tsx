@@ -19,7 +19,7 @@ export const Posts: React.VFC = () => {
   };
 
   const handelPostCreate = () => {
-    aCl.get<Post[]>("http://127.0.0.1:8080/api/posts").then((res) => {
+    aCl.get<Post[]>("http://127.0.0.1:8080/posts").then((res) => {
       setPosts(
         res.data.map((val) => ({
           id: val.id,
@@ -31,7 +31,7 @@ export const Posts: React.VFC = () => {
   };
 
   useEffect(() => {
-    aCl.get<Post[]>("http://127.0.0.1:8080/api/posts").then((res) => {
+    aCl.get<Post[]>("http://127.0.0.1:8080/posts").then((res) => {
       setPosts(
         res.data.map((val) => ({
           id: val.id,
