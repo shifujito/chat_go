@@ -30,7 +30,7 @@ export const CreatePost: React.VFC<Porps> = ({ loginUser, onCreate }) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     aCl
-      .post("http://localhost:8080/api/post/create", {
+      .post("http://localhost:8080/posts", {
         userId: loginUser.id,
         content: postContent,
       })
