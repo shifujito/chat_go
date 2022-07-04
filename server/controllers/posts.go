@@ -26,6 +26,7 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 	} else if r.Method == "POST" {
 		createPost(w, r)
 	}
+
 }
 
 func getPost(w http.ResponseWriter) {
