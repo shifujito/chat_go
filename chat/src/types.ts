@@ -1,11 +1,11 @@
 export type Post = {
-    id: number
-    name: string
-    text: string
-  }
+  id: number;
+  name: string;
+  text: string;
+};
 
 export type loginInfo = {
-    id: number
-    name: string;
-    isLogined: boolean
+  id: number;
+  name: string;
+  isLogined: boolean;
 };

@@ -2,12 +2,16 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
-	"sort"
 
 	"github.com/shifujito/chat_go/server/model"
 )
+
+type PostJoinUser struct {
+	Id   uint
+	Name string
+	Text string
+}
 
 func PostHandler(w http.ResponseWriter, r *http.Request) {
 	corsSetup(w)
@@ -17,17 +21,15 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func getPost(w http.ResponseWriter) {
-	// 投稿を一覧を渡す。
-	posts := []model.Post{}
-	db := model.DbConnect()
-	db.Find(&posts)
-	defer db.Close()
-	// sort create time
-	sort.Slice(posts, func(i, j int) bool { return posts[i].CreatedAt.After(posts[j].CreatedAt) })
-	// user id to user name
-	fmt.Println(posts)
-	// convertPost := allPostIdToName(posts)
-	// strcut to json
-	jsonPost, _ := json.Marshal(posts)
+	// add user name
+	result := addUserName()
+	jsonPost, _ := json.Marshal(result)
 	w.Write(jsonPost)
+}
+
+func addUserName() (resultList []PostJoinUser) {
+	db := model.DbConnect()
+	db.Table("users").Select("posts.id, posts.text, users.name").Joins("JOIN posts ON posts.user_id = users.id").Order("posts.created_at desc").Scan(&resultList)
+	defer db.Close()
+	return resultList
 }
